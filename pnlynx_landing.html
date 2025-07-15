@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PnLynx - See Your Chain. Know Your Gains.</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Rajdhani', monospace;
+            line-height: 1.6;
+            color: #00ff88;
+            background: #000911;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Matrix Rain Background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: #000911;
+        }
+        
+        .matrix-rain {
+            position: absolute;
+            top: -100px;
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            opacity: 0.1;
+            animation: rain 3s linear infinite;
+        }
+        
+        @keyframes rain {
+            0% { transform: translateY(-100px); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+        
+        /* Blockchain Grid Background */
+        .blockchain-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -2;
+            animation: gridMove 20s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        /* Floating Crypto Icons */
+        .crypto-icons {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .crypto-icon {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.1;
+            animation: floatCrypto 15s linear infinite;
+        }
+        
+        @keyframes floatCrypto {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 0.1; }
+            90% { opacity: 0.1; }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Terminal Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 9, 17, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid #00ff88;
+            z-index: 1000;
+            padding: 1rem 0;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #00ff88;
+            text-shadow: 0 0 20px #00ff88;
+            animation: glitchText 3s infinite;
+        }
+        
+        @keyframes glitchText {
+            0%, 90%, 100% { text-shadow: 0 0 20px #00ff88; }
+            95% { text-shadow: 2px 0 #ff0080, -2px 0 #00ff88; }
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #00ff88;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        
+        .nav-links a:hover {
+            border: 1px solid #00ff88;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        /* Cyber Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(circle at 30% 70%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 30%, rgba(255, 0, 128, 0.1) 0%, transparent 50%);
+        }
+        
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .hero-text h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+            text-shadow: 0 0 30px #00ff88;
+            animation: cyberpunkGlow 2s ease-in-out infinite alternate;
+            position: relative;
+        }
+        
+        .hero-text h1::before {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 2px;
+            color: #ff0080;
+            opacity: 0.7;
+            animation: glitch 0.3s infinite;
+        }
+        
+        @keyframes cyberpunkGlow {
+            from { text-shadow: 0 0 20px #00ff88, 0 0 40px #00ff88; }
+            to { text-shadow: 0 0 30px #00ff88, 0 0 60px #00ff88, 0 0 80px #ff0080; }
+        }
+        
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+        
+        .hero-text p {
+            font-size: 1.4rem;
+            color: #b0ffda;
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+        
+        .terminal-line {
+            font-family: 'Courier New', monospace;
+            color: #00ff88;
+            margin-bottom: 1rem;
+            animation: typewriter 3s steps(40) infinite;
+        }
+        
+        @keyframes typewriter {
+            0%, 50% { width: 0; }
+            100% { width: 100%; }
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 1.2rem 2.5rem;
+            border: 2px solid #00ff88;
+            border-radius: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            font-family: 'Orbitron', monospace;
+            background: transparent;
+        }
+        
+        .btn-primary {
+            color: #000911;
+            background: #00ff88;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            position: relative;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(0, 255, 136, 0.7);
+        }
+        
+        .btn-secondary {
+            color: #00ff88;
+            background: transparent;
+            position: relative;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.5);
+        }
+        
+        /* Holographic Dashboard */
+        .crypto-dashboard {
+            position: relative;
+            background: rgba(0, 9, 17, 0.8);
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+            padding: 2rem;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 50px rgba(0, 255, 136, 0.3);
+            transform: perspective(1000px) rotateY(-15deg) rotateX(5deg);
+            animation: hologramFloat 4s ease-in-out infinite;
+        }
+        
+        @keyframes hologramFloat {
+            0%, 100% { transform: perspective(1000px) rotateY(-15deg) rotateX(5deg) translateY(0px); }
+            50% { transform: perspective(1000px) rotateY(-15deg) rotateX(5deg) translateY(-10px); }
+        }
+        
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            color: #00ff88;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .crypto-stats {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+            font-family: 'Courier New', monospace;
+        }
+        
+        .stat-label {
+            color: #b0ffda;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+        
+        .stat-value {
+            font-weight: 700;
+            color: #00ff88;
+            text-shadow: 0 0 10px #00ff88;
+        }
+        
+        .profit {
+            color: #00ff88;
+            text-shadow: 0 0 15px #00ff88;
+        }
+        
+        .loss {
+            color: #ff0080;
+            text-shadow: 0 0 15px #ff0080;
+        }
+        
+        /* Hexagon Sections */
+        .section {
+            padding: 8rem 0;
+            position: relative;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            text-shadow: 0 0 30px #00ff88;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.3rem;
+            color: #b0ffda;
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Hexagon Grid Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+        
+        .feature-card {
+            background: rgba(0, 9, 17, 0.8);
+            border: 2px solid #00ff88;
+            border-radius: 0;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(20px 0%, 100% 0%, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0% 100%, 0% 20px);
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transition: left 0.8s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: #ff0080;
+            box-shadow: 0 20px 60px rgba(0, 255, 136, 0.3);
+        }
+        
+        .feature-card:hover::before {
+            left: 100%;
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            color: #00ff88;
+            text-shadow: 0 0 20px #00ff88;
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+        }
+        
+        .feature-description {
+            color: #b0ffda;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+        
+        /* Terminal Steps */
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+        
+        .step-card {
+            background: #000911;
+            border: 2px solid #00ff88;
+            border-radius: 0;
+            padding: 2rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .step-card::before {
+            content: attr(data-step);
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            background: #00ff88;
+            color: #000911;
+            padding: 0.5rem 1rem;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .step-card:hover {
+            border-color: #ff0080;
+            box-shadow: 0 0 30px rgba(255, 0, 128, 0.3);
+        }
+        
+        .step-title {
+            color: #ffffff;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem;
+            margin: 1.5rem 0 1rem;
+            text-transform: uppercase;
+        }
+        
+        .step-description {
+            color: #b0ffda;
+            line-height: 1.6;
+        }
+        
+        /* Audience Cards */
+        .audience-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .audience-item {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid #00ff88;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .audience-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #00ff88, #ff0080, #00ff88);
+            animation: borderScan 2s linear infinite;
+        }
+        
+        @keyframes borderScan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .audience-item:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: #ff0080;
+            transform: translateY(-5px);
+        }
+        
+        .audience-item h3 {
+            color: #ffffff;
+            font-family: 'Orbitron', monospace;
+            margin-bottom: 1rem;
+        }
+        
+        .audience-item p {
+            color: #b0ffda;
+        }
+        
+        /* Token Utility */
+        .utility-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .utility-card {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(255, 0, 128, 0.1));
+            border: 2px solid transparent;
+            border-image: linear-gradient(45deg, #00ff88, #ff0080) 1;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .utility-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0, 255, 136, 0.2);
+        }
+        
+        .utility-card h3 {
+            color: #ffffff;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+        
+        .utility-card p {
+            color: #b0ffda;
+            line-height: 1.6;
+        }
+        
+        /* FAQ Terminal */
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            background: rgba(0, 9, 17, 0.8);
+            border: 1px solid #00ff88;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+            font-family: 'Orbitron', monospace;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        
+        .faq-question:hover {
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            color: #b0ffda;
+            display: none;
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Cyber Footer */
+        footer {
+            background: rgba(0, 9, 17, 0.95);
+            border-top: 2px solid #00ff88;
+            padding: 4rem 0 2rem;
+            position: relative;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section h3 {
+            color: #00ff88;
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px #00ff88;
+        }
+        
+        .footer-section a {
+            color: #b0ffda;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.8rem;
+            transition: color 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .footer-section a:hover {
+            color: #00ff88;
+            text-shadow: 0 0 5px #00ff88;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #00ff88;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: #00ff88;
+            font-size: 1.5rem;
+        }
+        
+        .social-link:hover {
+            background: #00ff88;
+            color: #000911;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .crypto-dashboard {
+                transform: none;
+            }
+            
+            .feature-card {
+                clip-path: none;
+            }
+        }
+        
+        /* Scroll Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Additional Cyber Effects */
+        .cyber-line {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ff88, transparent);
+            margin: 2rem 0;
+            animation: scanLine 3s linear infinite;
+        }
+        
+        @keyframes scanLine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Matrix Background Effects -->
+    <div class="matrix-bg"></div>
+    <div class="blockchain-grid"></div>
+    <div class="crypto-icons"></div>
+    
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo">PnLynx</div>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">Protocol</a></li>
+                    <li><a href="#token">Token</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <div class="terminal-line">$ connecting_to_blockchain...</div>
+                    <h1 data-text="See Your Chain. Know Your Gains.">See Your Chain. Know Your Gains.</h1>
+                    <p>Real-time profit/loss tracking for your entire on-chain portfolio. Automated. Transparent. Smart.</p>
+                    <div class="cyber-line"></div>
+                    <div class="cta-buttons">
+                        <a href="#" class="btn btn-primary">Connect Wallet (Demo)</a>
+                        <a href="#" class="btn btn-secondary">Read Whitepaper</a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="crypto-dashboard">
+                        <div class="dashboard-header">
+                            <span>🔗</span>
+                            <h3>Chain Analytics Terminal</h3>
+                        </div>
+                        <div class="crypto-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">Total Value:</span>
+                                <span class="stat-value">$45,892.34</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Realized P&L:</span>
+                                <span class="stat-value profit">+$12,456.78</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Unrealized P&L:</span>
+                                <span class="stat-value loss">-$2,345.67</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Active Chains:</span>
+                                <span class="stat-value">3</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Total Trades:</span>
+                                <span class="stat-value">1,234</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Win Rate:</span>
+                                <span class="stat-value">67.8%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">Real-Time PnL Tracking. Fully On-Chain.</h2>
+            <div class="cyber-line"></div>
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <span class="feature-icon">⛓️</span>
+                    <h3 class="feature-title">Token-based FIFO Tracking</h3>
+                    <p class="feature-description">Advanced FIFO logic for accurate profit/loss calculations on every token transaction across multiple blockchains.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <span class="feature-icon">📈</span>
+                    <h3 class="feature-title">Realized & Unrealized Views</h3>
+                    <p class="feature-description">Separate terminal dashboards for realized gains and current unrealized positions with real-time updates.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <span class="feature-icon">🤖</span>
+                    <h3 class="feature-title">Agent & Genesis Analysis</h3>
+                    <p class="feature-description">Specialized tracking algorithms for AI agent tokens and genesis launch participants with advanced metrics.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <span class="feature-icon">📊</span>
+                    <h3 class="feature-title">PDF & CSV Export</h3>
+                    <p class="feature-description">Export comprehensive reports in multiple formats for accounting, tax purposes, and portfolio analysis.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <span class="feature-icon">📱</span>
+                    <h3 class="feature-title">Mobile Terminal</h3>
+                    <p class="feature-description">Responsive mobile dashboard with terminal-style interface for tracking your portfolio anywhere.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <span class="feature-icon">🌐</span>
+                    <h3 class="feature-title">Multi-Chain Protocol</h3>
+                    <p class="feature-description">Native support for Base, Arbitrum, Ethereum, with more chains being integrated through governance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">PnLynx Protocol — Automated Analysis</h2>
+            <p class="section-subtitle fade-in">Smart contract activity is pulled directly from chain and analyzed using advanced cryptographic logic.</p>
+            <div class="cyber-line"></div>
+            <div class="steps-container">
+                <div class="step-card fade-in" data-step="01">
+                    <h3 class="step-title">Initialize Connection</h3>
+                    <p class="step-description">Securely connect your Web3 wallet to access your complete transaction history across supported blockchains.</p>
+                </div>
+                <div class="step-card fade-in" data-step="02">
+                    <h3 class="step-title">Scan Blockchain Data</h3>
+                    <p class="step-description">Automatically scan all swaps, claims, stakes & transfers using our proprietary blockchain parsing algorithms.</p>
+                </div>
+                <div class="step-card fade-in" data-step="03">
+                    <h3 class="step-title">Calculate PnL Matrix</h3>
+                    <p class="step-description">Match trades via FIFO logic and calculate token-specific profit/loss using real-time price feeds.</p>
+                </div>
+                <div class="step-card fade-in" data-step="04">
+                    <h3 class="step-title">Generate Reports</h3>
+                    <p class="step-description">Export detailed profit/loss reports with terminal-style formatting in PDF or CSV formats.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Target Audience Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">If You Trade On-Chain — This Protocol's For You</h2>
+            <p class="section-subtitle fade-in">PnLynx helps these users track performance with military-grade precision:</p>
+            <div class="cyber-line"></div>
+            <div class="audience-grid">
+                <div class="audience-item fade-in">
+                    <h3>⚡ Active Token Traders</h3>
+                    <p>Track every swap and profit in real-time across multiple DEXs</p>
+                </div>
+                <div class="audience-item fade-in">
+                    <h3>🚀 Genesis Launch Participants</h3>
+                    <p>Monitor early-stage token performance with precision analytics</p>
+                </div>
+                <div class="audience-item fade-in">
+                    <h3>🤖 Agent Token Holders</h3>
+                    <p>Specialized AI agent token analytics and performance tracking</p>
+                </div>
+                <div class="audience-item fade-in">
+                    <h3>🏛️ DAO Treasury Managers</h3>
+                    <p>Comprehensive treasury tracking with governance reporting</p>
+                </div>
+                <div class="audience-item fade-in">
+                    <h3>📊 On-Chain Analysts</h3>
+                    <p>Professional reporting tools for accounting and compliance</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Token Utility Section -->
+    <section id="token" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">What Does $PNLYNX Unlock?</h2>
+            <div class="cyber-line"></div>
+            <div class="utility-grid">
+                <div class="utility-card fade-in">
+                    <h3>🔐 Premium Terminal Access</h3>
+                    <p>Unlock advanced features, unlimited tracking capabilities, and exclusive terminal commands.</p>
+                </div>
+                <div class="utility-card fade-in">
+                    <h3>📊 Custom Wallet Matrix</h3>
+                    <p>Create custom groups, apply advanced filters, and build personalized analytics dashboards.</p>
+                </div>
+                <div class="utility-card fade-in">
+                    <h3>🗳️ Protocol Governance</h3>
+                    <p>Vote on new integrations, chain expansions, and critical platform development decisions.</p>
+                </div>
+                <div class="utility-card fade-in">
+                    <h3>🚀 Chain Expansion Rights</h3>
+                    <p>Help decide which new blockchains to support next through decentralized governance.</p>
+                </div>
+                <div class="utility-card fade-in">
+                    <h3>📤 Unlimited Data Export</h3>
+                    <p>Generate unlimited PDF and CSV reports with advanced formatting and custom templates.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">Frequently Asked Questions</h2>
+            <div class="cyber-line"></div>
+            <div class="faq-container">
+                <div class="faq-item fade-in">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>What chains does PnLynx support?</span>
+                        <span>[+]</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>// Currently supported: Base, Arbitrum, Ethereum mainnet<br>// Coming soon: Polygon, Solana, Avalanche<br>// Adding more chains via governance votes</p>
+                    </div>
+                </div>
+                <div class="faq-item fade-in">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>What transactions are analyzed?</span>
+                        <span>[+]</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>// All on-chain activities including:<br>// - Token swaps (DEX transactions)<br>// - Claims and airdrops<br>// - Staking rewards<br>// - Transfers and DeFi interactions</p>
+                    </div>
+                </div>
+                <div class="faq-item fade-in">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Is wallet connection secure?</span>
+                        <span>[+]</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>// Security protocol: Read-only access<br>// No private key requests<br>// No signing permissions required<br>// Only public blockchain data analyzed</p>
+                    </div>
+                </div>
+                <div class="faq-item fade-in">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Where will $PNLYNX be tradable?</span>
+                        <span>[+]</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>// Initial launch: Major DEXs (Uniswap, SushiSwap)<br>// CEX listings: Under negotiation<br>// Details announced pre-launch</p>
+                    </div>
+                </div>
+                <div class="faq-item fade-in">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>What's included in free version?</span>
+                        <span>[+]</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>// Free tier includes:<br>// - Basic P&L tracking<br>// - Limited export (5/month)<br>// - Mobile dashboard access<br>// - Community support</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="cyber-line"></div>
+            <div style="text-align: center; padding-top: 2rem; color: #b0ffda; font-family: 'Courier New', monospace;">
+                <p>© 2025 PnLynx Protocol. All rights reserved. | Powered by blockchain technology.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Matrix Rain Effect
+        function createMatrixRain() {
+            const container = document.querySelector('.matrix-bg');
+            const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+            
+            for (let i = 0; i < 50; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'matrix-rain';
+                drop.style.left = Math.random() * 100 + '%';
+                drop.style.animationDelay = Math.random() * 3 + 's';
+                drop.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                
+                let text = '';
+                for (let j = 0; j < 20; j++) {
+                    text += chars.charAt(Math.floor(Math.random() * chars.length)) + '<br>';
+                }
+                drop.innerHTML = text;
+                
+                container.appendChild(drop);
+            }
+        }
+
+        // Floating Crypto Icons
+        function createFloatingIcons() {
+            const container = document.querySelector('.crypto-icons');
+            const icons = ['₿', 'Ξ', '◊', '⟠', '◈', '⧫', '⬟', '⬢'];
+            
+            setInterval(() => {
+                const icon = document.createElement('div');
+                icon.className = 'crypto-icon';
+                icon.style.left = Math.random() * 100 + '%';
+                icon.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                icon.textContent = icons[Math.floor(Math.random() * icons.length)];
+                
+                container.appendChild(icon);
+                
+                setTimeout(() => {
+                    icon.remove();
+                }, 20000);
+            }, 3000);
+        }
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // FAQ toggle
+        function toggleFaq(element) {
+            const answer = element.nextElementSibling;
+            const icon = element.querySelector('span:last-child');
+            
+            if (answer.style.display === 'block') {
+                answer.style.display = 'none';
+                icon.textContent = '[+]';
+            } else {
+                document.querySelectorAll('.faq-answer').forEach(ans => {
+                    ans.style.display = 'none';
+                });
+                document.querySelectorAll('.faq-question span:last-child').forEach(ic => {
+                    ic.textContent = '[+]';
+                });
+                
+                answer.style.display = 'block';
+                icon.textContent = '[-]';
+            }
+        }
+
+        // Initialize effects
+        createMatrixRain();
+        createFloatingIcons();
+
+        // Terminal typing effect
+        function typeWriter(element, text, speed = 50) {
+            let i = 0;
+            element.innerHTML = '';
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Add glitch effect to hero title
+        const heroTitle = document.querySelector('.hero-text h1');
+        if (heroTitle) {
+            setInterval(() => {
+                heroTitle.style.textShadow = `
+                    ${Math.random() * 4 - 2}px ${Math.random() * 4 - 2}px 0 #ff0080,
+                    ${Math.random() * 4 - 2}px ${Math.random() * 4 - 2}px 0 #00ff88
+                `;
+                setTimeout(() => {
+                    heroTitle.style.textShadow = '0 0 30px #00ff88';
+                }, 100);
+            }, 5000);
+        }
+
+        // Parallax effect
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.blockchain-grid');
+            if (parallax) {
+                parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+    </script>
+</body>
+</html>
